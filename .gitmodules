@@ -1,3 +1,6 @@
 [submodule "project-catwalk"]
 	path = project-catwalk
 	url = https://github.com/HRLAX45-SDC/project-catwalk.git
+[submodule "Catbird"]
+	path = Catbird
+	url = https://github.com/HRLAX45-SDC/Catbird.git

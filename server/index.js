@@ -1,6 +1,8 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const cors = require('cors');
-const pool = require('./database');
+const path = require('path');
+const db = require('./database');
 
 const app = express();
 
@@ -9,20 +11,10 @@ app.use(express.json());
 app.use(cors());
 
 // ROUTES
-// example
-app.use('/', (req, res) => res.status(200).send('Welcome'));
+// GET index
+app.use('/', (req, res) => res.status(200).send('INDEX'));
 
-// GET review data
-
-// GET review metaData
-
-// POST review
-
-// PUT helpful review
-
-// PUT report review
-
-const port = 3001;
+const port = process.env.PORT || 5000;
 const host = '0.0.0.0';
 app.listen(port, host, () => console.log(`Server has started on **http://${host}:${port}`));
 

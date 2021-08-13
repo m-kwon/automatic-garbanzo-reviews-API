@@ -1,5 +1,4 @@
 const pg = require('pg');
-const fs = require('fs');
 const loadFrom = require('./helper');
 const { username, password, database } = require('../config');
 const path = require('path');

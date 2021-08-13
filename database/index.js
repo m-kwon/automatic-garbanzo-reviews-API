@@ -11,7 +11,6 @@ client.connect()
   .then(() => console.log('Connected to database...'))
   .catch(err => console.log('Failed connecting to database: ', err));
 
-
 /*SET UP TABLES==============================================================================*/
 let tables = [];
 
@@ -58,63 +57,72 @@ tables.push(client.query(`
     value SMALLINT NOT NULL
   );
 `));
-/*SET UP LOAD DATA===========================================================================*/
-let loadData = [];
 
-let dataPath = path.join(__dirname, '../data')
-
-loadData.push(loadFrom('public.reviews', `${dataPath}/reviews.csv`));
-loadData.push(loadFrom('public.characteristics', `${dataPath}/characteristics.csv`));
-loadData.push(loadFrom('public.photos', `${dataPath}/photos.csv`));
-loadData.push(loadFrom('public.characteristics_reviews', `${dataPath}/characteristics_reviews.csv`));
-
-/*RESET PRIMARY KEY SEQUENCE=================================================================*/
-let sequences = [];
-
-sequences.push(client.query(`SELECT setval('reviews_id_seq', MAX(id)) FROM public.reviews;`));
-sequences.push(client.query(`SELECT setval('characteristics_id_seq', MAX(id)) FROM public.characteristics;`));
-sequences.push(client.query(`SELECT setval('photos_id_seq', MAX(id)) FROM public.photos;`));
-sequences.push(client.query(`SELECT setval('characteristics_reviews_id_seq', MAX(id)) FROM public.characteristics_reviews;`));
-
-/*SET UP FOREIGN KEYS========================================================================*/
-let foreignKeys = [];
-
-foreignKeys.push(client.query(`
-  ALTER TABLE public.photos
-    ADD CONSTRAINT fk_photos_review_id
-      FOREIGN KEY (review_id)
-        REFERENCES public.reviews(id);
-`));
-foreignKeys.push(client.query(`
-  ALTER TABLE public.characteristics_reviews
-    ADD CONSTRAINT fk_characteristics_reviews_review_id
-      FOREIGN KEY (review_id)
-        REFERENCES public.reviews(id);
-`));
-foreignKeys.push(client.query(`
-  ALTER TABLE public.characteristics_reviews
-    ADD CONSTRAINT fk_characteristics_reviews_review_id
-      FOREIGN KEY (characteristic_id)
-        REFERENCES public.characteristics(id);
-`));
-
-/*SET UP INDEXES=============================================================================*/
-let indexes = [];
-
-indexes.push(client.query(`CREATE INDEX reviews_product_id_index ON public.reviews(product_id);`));
-indexes.push(client.query(`CREATE INDEX photos_review_id_index ON public.photos(review_id);`));
-indexes.push(client.query(`CREATE INDEX characteristics_reviews_review_id_index ON public.characteristics_reviews(review_id);`));
-indexes.push(client.query(`CREATE INDEX characteristics_reviews_characteristic_id_index ON public.characteristics_reviews(characteristic_id);`));
-
-/*===========================================================================================*/
 Promise.all(tables)
-  .then(() => Promise.all(loadData))
-  .catch((err) => console.log('Failed to load data'))
-  .then(() => Promise.all(sequences))
-  .catch((err) => console.log('Failed to create sequences'))
-  .then(() => Promise.all(foreignKeys))
-  .catch((err) => console.log('Failed to create foreign keys'))
-  .then(() => Promise.all(indexes))
+  .then(() => {
+/*SET UP LOAD DATA===========================================================================*/
+    let loadData = [];
+
+    let dataPath = path.join(__dirname, '../data')
+
+    loadData.push(loadFrom('public.reviews', `${dataPath}/reviews.csv`));
+    loadData.push(loadFrom('public.characteristics', `${dataPath}/characteristics.csv`));
+    loadData.push(loadFrom('public.photos', `${dataPath}/photos.csv`));
+    loadData.push(loadFrom('public.characteristics_reviews', `${dataPath}/characteristics_reviews.csv`));
+
+    Promise.all(loadData)
+      .then(() => {
+/*RESET PRIMARY KEY SEQUENCE=================================================================*/
+        let sequences = [];
+
+        sequences.push(client.query(`SELECT setval('reviews_id_seq', MAX(id)) FROM public.reviews;`));
+        sequences.push(client.query(`SELECT setval('characteristics_id_seq', MAX(id)) FROM public.characteristics;`));
+        sequences.push(client.query(`SELECT setval('photos_id_seq', MAX(id)) FROM public.photos;`));
+        sequences.push(client.query(`SELECT setval('characteristics_reviews_id_seq', MAX(id)) FROM public.characteristics_reviews;`));
+
+        console.log('Successfully reset PK sequences');
+
+        Promise.all(sequences)
+          .then(() => {
+/*SET UP FOREIGN KEYS========================================================================*/
+            let foreignKeys = [];
+
+            foreignKeys.push(client.query(`
+              ALTER TABLE public.photos
+                ADD CONSTRAINT fk_photos_review_id
+                  FOREIGN KEY (review_id)
+                    REFERENCES public.reviews(id);
+            `));
+            foreignKeys.push(client.query(`
+              ALTER TABLE public.characteristics_reviews
+                ADD CONSTRAINT fk_characteristics_reviews_review_id
+                  FOREIGN KEY (review_id)
+                    REFERENCES public.reviews(id);
+            `));
+            foreignKeys.push(client.query(`
+              ALTER TABLE public.characteristics_reviews
+                ADD CONSTRAINT fk_characteristics_reviews_char_id
+                  FOREIGN KEY (characteristic_id)
+                    REFERENCES public.characteristics(id);
+            `));
+
+            console.log('Successfully created foreign keys');
+
+            Promise.all(foreignKeys)
+              .then(() => {
+/*SET UP INDEXES=============================================================================*/
+                let indexes = [];
+
+                indexes.push(client.query(`CREATE INDEX reviews_product_id_index ON public.reviews(product_id);`));
+                indexes.push(client.query(`CREATE INDEX photos_review_id_index ON public.photos(review_id);`));
+                indexes.push(client.query(`CREATE INDEX characteristics_reviews_review_id_index ON public.characteristics_reviews(review_id);`));
+                indexes.push(client.query(`CREATE INDEX characteristics_reviews_characteristic_id_index ON public.characteristics_reviews(characteristic_id);`));
+
+                console.log('Successfully created indexes');
+              })
+          })
+      })
+  })
   .catch((err) => {
     console.log('Failed to load data: ', err);
     client.end();

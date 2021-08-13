@@ -6,14 +6,6 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-// CONNECT TO DATABASE
-const host = 'localhost';
-const connectionString = `postgres://${username}:${password}@${host}/${database}`;
-const client = new pg.Client(connectionString);
-client.connect()
-  .then(() => console.log('Connected to database...'))
-  .catch(err => console.log('Failed connecting to database: ', err));
-
 // MIDDLEWARE
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));

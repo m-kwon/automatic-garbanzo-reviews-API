@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS sdc_reviews;
+CREATE DATABASE sdc_reviews;

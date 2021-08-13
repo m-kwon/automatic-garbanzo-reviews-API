@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/index.js",
-    "start:dev": "nodemon server/index.js"
+    "start:dev": "nodemon server/index.js",
+    "setup": "psql -U postgres -a -f server/database/setup/database.sql",
+    "load_csv": "psql -U postgres -a -f server/database/setup/loadCSV.sql"
   },
   "repository": {
     "type": "git",

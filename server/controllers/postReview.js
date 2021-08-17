@@ -41,7 +41,6 @@ module.exports = async (req, res) => {
   let promiseQueries = [];
 
   // INSERT CHARACTERISTIC RATINGS
-  let chars = ['Size', 'Width', 'Comfort', 'Quality', 'Length', 'Fit'];
   let characteristics = req.body.characteristics;
   let textChar = `
     INSERT INTO characteristics_reviews (
@@ -64,6 +63,7 @@ module.exports = async (req, res) => {
     INSERT INTO photos (review_id, url)
     VALUES ($1, $2, $3)
   `;
+
   for (let j = 0; j < photos.length; j++) {
     let valuesPhotos = [reviewId, photos[j]];
     promiseQueries.push(pool.query(textPhotos, valuesPhotos));

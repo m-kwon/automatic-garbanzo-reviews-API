@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
     r.rating,
     r.summary,
     r.recommend,
-    r.response,
+    NULLIF(r.response, 'null') as response,
     r.body,
     TO_CHAR(TO_TIMESTAMP(r.date / 1000), 'YYYY-MM-DDThh:mm:ss.SSSZ') AS date,
     r.reviewer_name,

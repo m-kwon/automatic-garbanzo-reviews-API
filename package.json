@@ -7,8 +7,8 @@
     "start": "node server/index.js",
     "start:dev": "nodemon server/index.js",
     "setup": "psql -U postgres -a -f database/db.sql && node database/db.js",
-    "test": "jest",
-    "test-coverage": "jest --coverage"
+    "test": "jest --detectOpenHandles",
+    "test-coverage": "jest --coverage -detectOpenHandles"
   },
   "repository": {
     "type": "git",

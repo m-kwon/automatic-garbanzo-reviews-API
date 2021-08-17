@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
     date,
     req.body.summary,
     req.body.body,
-    Boolean(req.body.recommend),
+    req.body.recommend,
     false,
     req.body.name,
     req.body.email,
@@ -52,11 +52,10 @@ module.exports = async (req, res) => {
       $1, $2, $3
     )
   `;
-  for (let i = 0; i < chars.length; i++) {
-    if (characteristics[chars[i]]) {
-      let valuesChar = [reviewId, (j + 1), characteristics[chars[j]]];
-      promiseQueries.push(pool.query(textChar, valuesChar));
-    }
+
+  for (let key in characteristics) {
+    let valuesChar = [reviewId, Number(key), characteristics[key]]
+    promiseQueries.push(pool.query(textChar, valuesChar));
   }
 
   // INSERT PHOTOS

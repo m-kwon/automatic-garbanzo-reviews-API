@@ -39,6 +39,6 @@ module.exports = async (req, res) => {
       reviewData.results[i].photos = [];
     }
   }
-  console.log(query.rows);
+
   res.status(200).send(reviewData);
 };

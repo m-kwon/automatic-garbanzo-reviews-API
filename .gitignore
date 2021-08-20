@@ -1,5 +1,6 @@
 ### sensitive data
 config.js
+newrelic.js
 
 #### directories / large files
 node_modules

@@ -1,9 +1,8 @@
 const pg = require('pg');
 const fs = require('fs');
 const copyFrom = require('pg-copy-streams').from;
-const { username, password, database } = require('../config');
+const { host, username, password, database } = require('../config');
 
-const host = 'localhost';
 const connectionString = `postgres://${username}:${password}@${host}/${database}`;
 
 module.exports = (targetTable, inputFile) => {

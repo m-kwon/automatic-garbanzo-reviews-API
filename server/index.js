@@ -1,6 +1,5 @@
 const express = require('express');
 const pg = require('pg');
-const { username, password, database } = require('../config')
 const cors = require('cors');
 const bodyParser = require('body-parser');
 

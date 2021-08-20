@@ -30,11 +30,11 @@
     "pg": "^8.7.1",
     "pg-copy-streams": "^5.1.1",
     "pg-hstore": "^2.3.4",
-    "postgres": "^1.0.2",
-    "sequelize": "^6.6.5"
+    "postgres": "^1.0.2"
   },
   "devDependencies": {
     "jest": "^27.0.6",
+    "newrelic": "^8.1.0",
     "nodemon": "^2.0.12",
     "supertest": "^6.1.5"
   }

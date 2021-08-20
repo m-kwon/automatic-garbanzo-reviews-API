@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  server:
+    build: server/
+    depends_on:
+      - 'database'
+    ports:
+      - '5000:5000'
+  nginx:
+    restart: always
+    build:
+      context: ./nginx
+    ports:
+      - '80:80'
+  database:
+    build: database/
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata:

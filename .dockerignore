@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+*.csv
+*.sql
+spec
+spec.k6
+screenshots
+Catbird
